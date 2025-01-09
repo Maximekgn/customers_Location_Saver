@@ -1,13 +1,17 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///locations.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-db = SQLAlchemy(app)
 
-# Importer le modèle
-from models import Location
+from models import db, Location
+
+db.init_app(app)
+
+# Create tables
+with app.app_context():
+    db.create_all()
 
 @app.route('/')
 def home():
@@ -36,5 +40,4 @@ def map():
     return render_template('map.html', locations=locations)
 
 if __name__ == '__main__':
-    db.create_all()
     app.run(debug=True)
