@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
@@ -22,8 +22,8 @@ def home():
 def add_location():
     if request.method == 'POST':
         name = request.form['name']
-        latitude = request.form['latitude']
-        longitude = request.form['longitude']
+        latitude = float(request.form['latitude'])  # Convert to float
+        longitude = float(request.form['longitude'])  # Convert to float
 
         # Enregistrer les données dans la base
         new_location = Location(name=name, latitude=latitude, longitude=longitude)
@@ -37,7 +37,8 @@ def add_location():
 @app.route('/map')
 def map():
     locations = Location.query.all()
-    return render_template('map.html', locations=locations)
+    locations_list = [location.to_dict() for location in locations]  # Convert to list of dicts
+    return render_template('map.html', locations=locations_list)
 
 if __name__ == '__main__':
     app.run(debug=True)

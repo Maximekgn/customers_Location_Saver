@@ -13,20 +13,33 @@
     <div id="map"></div>
     <script>
         // Initialisation de la carte
-        var map = L.map('map').setView([0, 0], 2);
+        var map = L.map('map').setView([46.227638, 2.213749], 6); // Centered on France
 
         // Ajouter un fond de carte
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OpenStreetMap contributors'
         }).addTo(map);
 
-        // Ajouter les points à partir des données de la base
-        var locations = JSON.parse('{{ locations|tojson|escapejs }}');
-        locations.forEach(location => {
-            L.marker([location.latitude, location.longitude])
-             .addTo(map)
-             .bindPopup(location.name);
-        });
+        try {
+            // Ajouter les points à partir des données de la base
+            var locations = {{ locations|tojson|safe }};
+            if (locations && locations.length > 0) {
+                locations.forEach(location => {
+                    if (location.latitude && location.longitude) {
+                        L.marker([parseFloat(location.latitude), parseFloat(location.longitude)])
+                         .addTo(map)
+                         .bindPopup(location.name || 'Sans nom');
+                    }
+                });
+                
+                // Ajuster la vue si des marqueurs sont présents
+                if (locations.length === 1) {
+                    map.setView([locations[0].latitude, locations[0].longitude], 13);
+                }
+            }
+        } catch (error) {
+            console.error('Erreur lors du chargement des données:', error);
+        }
     </script>
 </body>
 </html>
