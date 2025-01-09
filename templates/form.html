@@ -11,19 +11,16 @@
             <div class="form-group">
                 <label for="name">Nom:</label>
                 <input type="text" id="name" name="name" required>
-                <span class="error" id="nameError">Le nom est requis</span>
             </div>
             <div class="form-group">
                 <label for="latitude">Latitude:</label>
                 <input type="number" id="latitude" name="latitude" step="any" required 
                        min="-90" max="90" placeholder="Ex: 48.8566">
-                <span class="error" id="latError">La latitude doit être entre -90 et 90</span>
             </div>
             <div class="form-group">
                 <label for="longitude">Longitude:</label>
                 <input type="number" id="longitude" name="longitude" step="any" required
                        min="-180" max="180" placeholder="Ex: 2.3522">
-                <span class="error" id="longError">La longitude doit être entre -180 et 180</span>
             </div>
             <div class="form-group">
                 <button type="submit">Enregistrer</button>
