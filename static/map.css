@@ -1,5 +1,15 @@
 #map {
-    height: 400px;
+    height: 100%;
     width: 100%;
-    border-radius: 10px;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 20px auto;
+    border: 1px solid #e0e0e0;
+    transition: all 0.3s ease;
+}
+
+body {
+    background-color: #f0f0f0;
+    height: 100vh;
+    padding: 1rem;
 }
