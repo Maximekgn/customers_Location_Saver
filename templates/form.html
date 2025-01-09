@@ -2,47 +2,12 @@
 <html lang="fr">
 <head>
     <title>Ajouter une Géolocalisation</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
-    <style>
-        .form-container {
-            max-width: 500px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-        .form-group {
-            margin-bottom: 15px;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        input {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-        }
-        button {
-            background-color: #4CAF50;
-            color: white;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .error {
-            color: red;
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='form.css') }}">
 </head>
 <body>
     <div class="form-container">
         <h1>Ajouter une géolocalisation</h1>
-        <form action="/add" method="POST" onsubmit="return validateForm()">
+        <form action="/add" method="POST">
             <div class="form-group">
                 <label for="name">Nom:</label>
                 <input type="text" id="name" name="name" required>
@@ -67,39 +32,5 @@
         </form>
     </div>
 
-    <script>
-        function validateForm() {
-            let isValid = true;
-            const name = document.getElementById('name').value;
-            const lat = parseFloat(document.getElementById('latitude').value);
-            const long = parseFloat(document.getElementById('longitude').value);
-
-            // Validate name
-            if (!name.trim()) {
-                document.getElementById('nameError').style.display = 'block';
-                isValid = false;
-            } else {
-                document.getElementById('nameError').style.display = 'none';
-            }
-
-            // Validate latitude
-            if (isNaN(lat) || lat < -90 || lat > 90) {
-                document.getElementById('latError').style.display = 'block';
-                isValid = false;
-            } else {
-                document.getElementById('latError').style.display = 'none';
-            }
-
-            // Validate longitude
-            if (isNaN(long) || long < -180 || long > 180) {
-                document.getElementById('longError').style.display = 'block';
-                isValid = false;
-            } else {
-                document.getElementById('longError').style.display = 'none';
-            }
-
-            return isValid;
-        }
-    </script>
 </body>
 </html>
