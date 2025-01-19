@@ -2,51 +2,85 @@
 <html lang="fr">
   <head>
     <title>Carte des Clients</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Leaflet pour la carte -->
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
-    <link rel="stylesheet" href="{{ url_for('static', filename='map.css') }}" />
   </head>
-  <body>
-    <h1>Carte des Clients</h1>
-    <div id="map"></div>
+  <body class="bg-gray-50">
+    <!-- Container principal -->
+    <div class="max-w-6xl mx-auto p-6">
+      <!-- En-tête avec navigation -->
+      <div class="flex justify-between items-center mb-8">
+        <h1 class="text-3xl font-bold text-gray-800">
+          Carte des Clients
+        </h1>
+        <a href="{{ url_for('add_location') }}" 
+           class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+          Ajouter un lieu
+        </a>
+      </div>
+
+      <!-- Carte -->
+      <div class="rounded-lg overflow-hidden shadow-lg">
+        <div id="map" class="h-[600px] w-full"></div>
+      </div>
+    </div>
+
+    <!-- Script pour la carte -->
     <script>
-      // Initialisation de la carte
-      var map = L.map("map").setView([46.227638, 2.213749], 6); // Centered on France
+      // Configuration initiale de la carte
+      const initMap = () => {
+        const map = L.map("map").setView([46.227638, 2.213749], 6);
 
-      // Ajouter un fond de carte
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "© OpenStreetMap contributors",
-      }).addTo(map);
+        // Ajouter le fond de carte
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          attribution: "© OpenStreetMap contributors"
+        }).addTo(map);
 
-      // Ajouter les points à partir des données de la base
-      var locations = JSON.parse('{{ locations|tojson|safe }}');
-      if (locations && locations.length > 0) {
-        var bounds = L.latLngBounds();
-        
-        locations.forEach((location) => {
-          if (location.latitude && location.longitude) {
-            var lat = parseFloat(location.latitude);
-            var lng = parseFloat(location.longitude);
-            
-            L.marker([lat, lng])
-              .addTo(map)
-              .bindPopup(
-                `Nom: ${location.name}, Latitude: ${location.latitude}, Longitude: ${location.longitude}`
-              );
+        // Récupérer et afficher les marqueurs
+        const locations = JSON.parse('{{ locations|tojson|safe }}');
+        if (locations?.length > 0) {
+          const bounds = L.latLngBounds();
+          
+          // Ajouter chaque marqueur sur la carte
+          locations.forEach(location => {
+            if (location.latitude && location.longitude) {
+              const lat = parseFloat(location.latitude);
+              const lng = parseFloat(location.longitude);
               
-            bounds.extend([lat, lng]);
-          }
-        });
+              // Créer un popup avec les informations
+              const popupContent = `
+                <div class="p-2">
+                  <h3 class="font-bold mb-2">${location.name}</h3>
+                  <p class="text-sm text-gray-600">
+                    Latitude: ${location.latitude}<br>
+                    Longitude: ${location.longitude}
+                  </p>
+                </div>
+              `;
+              
+              // Ajouter le marqueur avec le popup
+              L.marker([lat, lng])
+                .addTo(map)
+                .bindPopup(popupContent);
+              
+              bounds.extend([lat, lng]);
+            }
+          });
 
-        // Ajuster la vue pour inclure tous les marqueurs
-        if (locations.length === 1) {
-          map.setView([locations[0].latitude, locations[0].longitude], 13);
-        } else if (bounds.isValid()) {
-          map.fitBounds(bounds, {padding: [50, 50]});
+          // Ajuster la vue de la carte
+          if (locations.length === 1) {
+            map.setView([locations[0].latitude, locations[0].longitude], 13);
+          } else if (bounds.isValid()) {
+            map.fitBounds(bounds, {padding: [50, 50]});
+          }
         }
-      } else {
-        console.error("Aucune donnée de localisation trouvée.");
-      }
+      };
+
+      // Initialiser la carte au chargement
+      document.addEventListener('DOMContentLoaded', initMap);
     </script>
   </body>
 </html>

@@ -2,32 +2,114 @@
 <html lang="fr">
 <head>
     <title>Ajouter une Géolocalisation</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='form.css') }}">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Leaflet pour la carte -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
 </head>
-<body>
-    <div class="form-container">
-        <h1>Ajouter une géolocalisation</h1>
-        <form action="/add" method="POST">
-            <div class="form-group">
-                <label for="name">Nom:</label>
-                <input type="text" id="name" name="name" required>
+
+<body class="bg-gray-50">
+    <!-- Container principal -->
+    <div class="max-w-3xl mx-auto p-6">
+        <!-- En-tête -->
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">
+            Ajouter une géolocalisation
+        </h1>
+
+        <!-- Carte interactive -->
+        <div class="mb-8 rounded-lg overflow-hidden shadow-lg">
+            <div id="map-picker" class="h-[400px] w-full"></div>
+        </div>
+
+        <!-- Formulaire -->
+        <form action="/add" method="POST" class="bg-white rounded-lg shadow-lg p-6">
+            <!-- Champ Nom -->
+            <div class="mb-6">
+                <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                    Nom du lieu
+                </label>
+                <input type="text" 
+                       id="name" 
+                       name="name" 
+                       required
+                       class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                       placeholder="Entrez un nom">
             </div>
-            <div class="form-group">
-                <label for="latitude">Latitude:</label>
-                <input type="number" id="latitude" name="latitude" step="any" required 
-                       min="-90" max="90" placeholder="Ex: 48.8566">
+
+            <!-- Coordonnées -->
+            <div class="grid grid-cols-2 gap-4 mb-6">
+                <!-- Latitude -->
+                <div>
+                    <label for="latitude" class="block text-sm font-medium text-gray-700 mb-2">
+                        Latitude
+                    </label>
+                    <input type="number" 
+                           id="latitude" 
+                           name="latitude" 
+                           step="any" 
+                           required
+                           class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                           placeholder="Cliquez sur la carte">
+                </div>
+
+                <!-- Longitude -->
+                <div>
+                    <label for="longitude" class="block text-sm font-medium text-gray-700 mb-2">
+                        Longitude
+                    </label>
+                    <input type="number" 
+                           id="longitude" 
+                           name="longitude" 
+                           step="any" 
+                           required
+                           class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                           placeholder="Cliquez sur la carte">
+                </div>
             </div>
-            <div class="form-group">
-                <label for="longitude">Longitude:</label>
-                <input type="number" id="longitude" name="longitude" step="any" required
-                       min="-180" max="180" placeholder="Ex: 2.3522">
-            </div>
-            <div class="form-group">
-                <button type="submit">Enregistrer</button>
-                <a href="{{ url_for('map') }}" style="margin-left: 10px;">Voir la carte</a>
+
+            <!-- Boutons -->
+            <div class="flex justify-between">
+                <button type="submit" 
+                        class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors">
+                    Enregistrer
+                </button>
+                <a href="{{ url_for('map') }}" 
+                   class="bg-gray-600 text-white px-6 py-2 rounded-lg hover:bg-gray-700 transition-colors">
+                    Voir la carte
+                </a>
             </div>
         </form>
     </div>
 
+    <!-- Script pour la carte -->
+    <script>
+        // Configuration initiale de la carte
+        const initMap = () => {
+            const map = L.map("map-picker").setView([46.227638, 2.213749], 6);
+            let marker = null;
+
+            // Ajouter le fond de carte
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+                attribution: "© OpenStreetMap contributors"
+            }).addTo(map);
+
+            // Gérer la sélection de position
+            map.on('click', (e) => {
+                const { lat, lng } = e.latlng;
+                
+                // Mettre à jour les champs
+                document.getElementById('latitude').value = lat.toFixed(6);
+                document.getElementById('longitude').value = lng.toFixed(6);
+                
+                // Mettre à jour le marqueur
+                if (marker) marker.remove();
+                marker = L.marker([lat, lng]).addTo(map);
+            });
+        };
+
+        // Initialiser la carte au chargement
+        document.addEventListener('DOMContentLoaded', initMap);
+    </script>
 </body>
 </html>

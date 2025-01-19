@@ -41,7 +41,7 @@ Make sure you have the following installed on your machine:
 
 1. Start the Flask development server:
     ```bash
-    python app.py
+    c
     ```
 
 2. Open your web browser and navigate to `http://127.0.0.1:5000/`.
