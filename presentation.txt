@@ -1,0 +1,92 @@
+SYSTÈME DE GÉOLOCALISATION INTERACTIVE
+=====================================
+
+Description du Projet
+-------------------
+Ce projet est une application web moderne de géolocalisation qui permet aux utilisateurs de gérer et visualiser des emplacements sur une carte interactive. L'application est conçue avec une interface utilisateur intuitive et responsive, offrant une expérience utilisateur optimale.
+
+Fonctionnalités Principales
+-------------------------
+1. Carte Interactive
+   - Visualisation de tous les emplacements enregistrés
+   - Carte centrée sur la France avec zoom automatique
+   - Marqueurs cliquables avec informations détaillées
+   - Interface responsive adaptée à tous les écrans
+
+2. Ajout de Localisation
+   - Sélection directe sur la carte par simple clic
+   - Formulaire intuitif pour nommer l'emplacement
+   - Coordonnées (latitude/longitude) remplies automatiquement
+   - Validation des données en temps réel
+
+3. Gestion des Données
+   - Stockage sécurisé dans une base de données SQLite
+   - Compatibilité avec le déploiement sur Vercel
+   - Structure de données optimisée
+   - Sauvegarde automatique des informations
+
+Technologies Utilisées
+--------------------
+1. Frontend
+   - HTML5 pour la structure
+   - Tailwind CSS pour le design moderne et responsive
+   - JavaScript moderne (ES6+) pour l'interactivité
+   - Leaflet.js pour la cartographie interactive
+
+2. Backend
+   - Flask (Framework Python)
+   - SQLAlchemy pour la gestion de la base de données
+   - SQLite pour le stockage des données
+   - Architecture MVC (Modèle-Vue-Contrôleur)
+
+Avantages du Système
+------------------
+1. Facilité d'Utilisation
+   - Interface claire et intuitive
+   - Navigation simplifiée
+   - Pas de connaissances techniques requises
+   - Apprentissage rapide
+
+2. Performance
+   - Chargement rapide des cartes
+   - Mise à jour en temps réel
+   - Optimisation des ressources
+   - Réactivité maximale
+
+3. Sécurité
+   - Validation des données
+   - Protection contre les injections SQL
+   - Gestion sécurisée des requêtes
+   - Sauvegarde fiable des données
+
+Cas d'Utilisation
+---------------
+1. Gestion de Points d'Intérêt
+   - Suivi des emplacements clients
+   - Cartographie d'événements
+   - Gestion de sites
+   - Planification logistique
+
+2. Applications Pratiques
+   - Entreprises de livraison
+   - Agences immobilières
+   - Services touristiques
+   - Gestion d'actifs
+
+Perspectives d'Évolution
+----------------------
+1. Fonctionnalités Futures
+   - Système d'authentification
+   - Catégorisation des emplacements
+   - Export de données
+   - Analyses statistiques
+
+2. Améliorations Prévues
+   - Interface multilingue
+   - Mode hors ligne
+   - Application mobile
+   - Intégration de services tiers
+
+Conclusion
+---------
+Cette application représente une solution moderne et efficace pour la gestion de localisations géographiques. Sa simplicité d'utilisation combinée à ses fonctionnalités avancées en fait un outil précieux pour diverses applications professionnelles et personnelles. 

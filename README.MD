@@ -21,7 +21,7 @@ Make sure you have the following installed on your machine:
     cd yourproject
     ```
 
-2. Create a virtual environment (optional but recommended):
+2. Create a virtual environment (optional but recommended):po
     ```bash
     python -m venv venv
     source venv/bin/activate  # On Windows use `venv\Scripts\activate`

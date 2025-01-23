@@ -22,6 +22,14 @@
         </a>
       </div>
 
+      <!-- Barre de recherche -->
+      <div class="mb-6">
+        <input type="text"
+               id="search"
+               class="w-full px-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+               placeholder="Rechercher un client...">
+      </div>
+
       <!-- Carte -->
       <div class="rounded-lg overflow-hidden shadow-lg">
         <div id="map" class="h-[600px] w-full"></div>
@@ -33,6 +41,7 @@
       // Configuration initiale de la carte
       const initMap = () => {
         const map = L.map("map").setView([46.227638, 2.213749], 6);
+        let markers = [];
 
         // Ajouter le fond de carte
         L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
@@ -41,42 +50,63 @@
 
         // Récupérer et afficher les marqueurs
         const locations = JSON.parse('{{ locations|tojson|safe }}');
-        if (locations?.length > 0) {
-          const bounds = L.latLngBounds();
+        
+        // Fonction pour afficher les marqueurs
+        const displayMarkers = (searchTerm = '') => {
+          // Nettoyer les marqueurs existants
+          markers.forEach(marker => marker.remove());
+          markers = [];
           
-          // Ajouter chaque marqueur sur la carte
-          locations.forEach(location => {
-            if (location.latitude && location.longitude) {
-              const lat = parseFloat(location.latitude);
-              const lng = parseFloat(location.longitude);
-              
-              // Créer un popup avec les informations
-              const popupContent = `
-                <div class="p-2">
-                  <h3 class="font-bold mb-2">${location.name}</h3>
-                  <p class="text-sm text-gray-600">
-                    Latitude: ${location.latitude}<br>
-                    Longitude: ${location.longitude}
-                  </p>
-                </div>
-              `;
-              
-              // Ajouter le marqueur avec le popup
-              L.marker([lat, lng])
-                .addTo(map)
-                .bindPopup(popupContent);
-              
-              bounds.extend([lat, lng]);
-            }
-          });
+          if (locations?.length > 0) {
+            const bounds = L.latLngBounds();
+            
+            // Filtrer et ajouter chaque marqueur sur la carte
+            locations.forEach(location => {
+              if (location.latitude && location.longitude) {
+                // Vérifier si le nom correspond à la recherche
+                if (!searchTerm || location.name.toLowerCase().includes(searchTerm.toLowerCase())) {
+                  const lat = parseFloat(location.latitude);
+                  const lng = parseFloat(location.longitude);
+                  
+                  // Créer un popup avec les informations
+                  const popupContent = `
+                    <div class="p-2">
+                      <h3 class="font-bold mb-2">${location.name}</h3>
+                      <p class="text-sm text-gray-600">
+                        Latitude: ${location.latitude}<br>
+                        Longitude: ${location.longitude}
+                      </p>
+                    </div>
+                  `;
+                  
+                  // Ajouter le marqueur avec le popup
+                  const marker = L.marker([lat, lng])
+                    .addTo(map)
+                    .bindPopup(popupContent);
+                  
+                  markers.push(marker);
+                  bounds.extend([lat, lng]);
+                }
+              }
+            });
 
-          // Ajuster la vue de la carte
-          if (locations.length === 1) {
-            map.setView([locations[0].latitude, locations[0].longitude], 13);
-          } else if (bounds.isValid()) {
-            map.fitBounds(bounds, {padding: [50, 50]});
+            // Ajuster la vue de la carte
+            if (markers.length === 1) {
+              map.setView([markers[0].getLatLng().lat, markers[0].getLatLng().lng], 13);
+            } else if (bounds.isValid()) {
+              map.fitBounds(bounds, {padding: [50, 50]});
+            }
           }
-        }
+        };
+
+        // Initialiser l'affichage
+        displayMarkers();
+
+        // Gérer la recherche
+        const searchInput = document.getElementById('search');
+        searchInput.addEventListener('input', (e) => {
+          displayMarkers(e.target.value);
+        });
       };
 
       // Initialiser la carte au chargement
